@@ -4,7 +4,7 @@ import FileShare from "../FileShare"
 export default function index(props) {
   function openClick(e) {
     console.log("Open Clicked!");
-    console.log(e);
+    console.log('File props',props);
     console.log(props.data);
     props.data.openFunction(e);
   }
@@ -30,14 +30,14 @@ export default function index(props) {
       });
   }
   let index = props.data.index;
-  let { id, name, owner, sharable } = props.data.file;
+  let { id, name, owner, sharable, file } = props.data.file;
   if (sharable){
     return (
       <tr>
         <th scope="row">{index + 1}</th>
         <td>{name}</td>
         <td>{owner}</td>
-        <td><button onClick={() => openClick(id)}><i className="fa fa-folder-open" aria-hidden="true"></i></button></td>
+        <td><button onClick={() => openClick(props.data.file)}><i className="fa fa-folder-open" aria-hidden="true"></i></button></td>
         <td><FileShare file={props.data.file} /></td>
         <td><button onClick={() => deleteClick(id)}><i className="fa fa-trash" aria-hidden="true"></i></button></td>
       </tr>
@@ -49,7 +49,7 @@ export default function index(props) {
         <th scope="row">{index + 1}</th>
         <td>{name}</td>
         <td>{owner}</td>
-        <td><button onClick={() => openClick(id)}><i className="fa fa-folder-open" aria-hidden="true"></i></button></td>
+        <td><button onClick={() => openClick(props.data.file)}><i className="fa fa-folder-open" aria-hidden="true"></i></button></td>
         <td>Only the owner <br/>can share the file.</td>
         <td>Only the owner <br/>can delete the file.</td>
       </tr>

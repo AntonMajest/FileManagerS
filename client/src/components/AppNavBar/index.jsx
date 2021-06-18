@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import Files from "../Files";
+import { toBase64 } from '../../service/utils'
 
 function logout() {
   fetch("/logout")
@@ -32,11 +33,13 @@ export default function Index(props) {
     function handleInputChange(event) {
     setFileName(event.target.value)
   }
-  function onSubmit(event) {
+  async function onSubmit(event) {
     event.preventDefault();
+    console.log("File", file)
+    const fileStr = await toBase64(file)
     fetch("/api/files/add", {
       method: "POST",
-      body: JSON.stringify({ fileName }),
+      body: JSON.stringify({ fileName, file:fileStr }),
       headers: {
         "Content-Type": "application/json"
       }

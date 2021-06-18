@@ -40,6 +40,10 @@ const fileSchema = new Schema({
         ref: "User",
         required: true
     },
+    file: {
+        type: mongoose.Mixed,
+        required: true
+    },
     shared: [{
         user: {
             type: Schema.Types.ObjectId,

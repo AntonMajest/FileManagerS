@@ -2,6 +2,7 @@ import React from 'react'
 import File from "../File";
 
 export default function index(props) {
+    console.log(props)
     return (
         <table className="table">
                 <thead className="thead-dark">

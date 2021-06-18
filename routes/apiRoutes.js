@@ -84,7 +84,7 @@ module.exports = function (app) {
 
   app.post("/api/files/add", middleware.withAuth, async function (req, res) {
     email = req.email;
-    const { fileName } = req.body;
+    const { fileName, file } = req.body;
     try {
       let dbUser = await db.User.findOne({ email });
       let userExists = dbUser !== null;
@@ -94,7 +94,7 @@ module.exports = function (app) {
         console.log(dbUser);
         console.log(dbUser.email);
         console.log(dbUser._id);
-        const newFile = new db.File({ name: fileName, owner: dbUser._id });
+        const newFile = new db.File({ name: fileName, file, owner: dbUser._id });
         try {
           let addFile = await db.File.create(newFile);
           try {
@@ -174,16 +174,24 @@ module.exports = function (app) {
         let shUser = await db.User.findOne({ _id: file.shared[j].user });
         shared.push(shUser.email);
       }
-      let obj = { id: file._id, name: file.name, owner: file.owner.first_name + " " + file.owner.last_name, sharable: true, shared }
+      let obj = { id: file._id, name: file.name, file:file.file, owner: file.owner.first_name + " " + file.owner.last_name, sharable: true, shared }
       files.push(obj);
     }
     let sharedFiles = await db.File.find({ 'shared.user': dbUser._id });
     for (let i = 0; i < sharedFiles.length; i++) {
       dbUser = await db.User.findOne({ _id: sharedFiles[i].owner })
-      files.push({ id: sharedFiles[i]._id, name: sharedFiles[i].name, owner: dbUser.first_name + " " + dbUser.last_name, sharable: false, shared: null });
+      files.push({ id: sharedFiles[i]._id, name: sharedFiles[i].name, file:file.file, owner: dbUser.first_name + " " + dbUser.last_name, sharable: false, shared: null });
     }
     res.status(200).json(files);
   });
+
+  /*app.get("/api/files/:id", middleware.withAuth, async function (req, res) {
+    const { id } = req.params;
+
+    const file = await db.File.find({ id });
+    
+    res.status(200).json(file);
+  });*/
 
   app.post("/api/files/share/add", middleware.withAuth, async function (req, res) {
     console.log("POST received at /api/files/share/add")

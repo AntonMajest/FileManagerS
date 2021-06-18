@@ -5,11 +5,12 @@ import OpenFiles from "../OpenFiles"
 export default class index extends Component {
     constructor() {
         super();
-        this.state = { openFileIds: [], openFiles: [] };
+        this.state = { openFileIds: [], openFiles: [], files:{} };
     }
 
     closeFileFunction = async (id) => {
         let arr = this.state.openFileIds;
+        delete this.state.files[id]
         if (arr.includes(id)) {
             const newFileIds = [];
             for (let i = 0; i < arr.length; i++) {
@@ -30,13 +31,15 @@ export default class index extends Component {
             }
         }
     }
-    openFileFunction = (id) => {
+    openFileFunction = (obj) => {
+        let { id } = obj
         let arr = this.state.openFileIds;
         if (!arr.includes(id)) {
             arr = arr.concat([id]);
+            this.state.files[id] = obj
             this.setState({
                 openFileIds: arr,
-                openFiles: <OpenFiles ids={arr} closeFileFunction={this.closeFileFunction} />
+                openFiles: <OpenFiles ids={arr} files={this.state.files} closeFileFunction={this.closeFileFunction} />
             });
         }
     };
